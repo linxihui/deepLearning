@@ -11,10 +11,12 @@ MatrixXd sigm(MatrixXd x);
 MatrixXd tanh(MatrixXd x);
 VectorXd dropoutMask(int size, double fraction);
 MatrixXd bernoulli_sample(MatrixXd prob);
-MatrixXd extractCols(MatrixXd &x, VectorXd indices);
-int updateCols(MatrixXd &x, MatrixXd &up, VectorXd indices);
+//MatrixXd extractCols(MatrixXd &x, VectorXd indices);
+//int updateCols(MatrixXd &x, MatrixXd &up, VectorXd indices);
 ArrayXXi sign(ArrayXXd x);
 
+class RBM;
+class DBN;
 class feedForwardNetwork;
 class stackedAutoEncoder;
 
@@ -56,8 +58,8 @@ class DBN {
 			int batchsize = 100, int CD = 1, bool verbose = true);
 		//
 		//MatrixXd move_down(MatrixXd h, int round = 10);
-		MatrixXd extractFeature(MatrixXd x);
-		MatrixXd reconstruct(MatrixXd x);
+		MatrixXd extractHiddenFeature(MatrixXd x);
+		MatrixXd reconstructInput(MatrixXd x);
 	};
 
 
@@ -94,8 +96,8 @@ class feedForwardNetwork {
 		VectorXd rpropTrain(MatrixXd x, MatrixXd y, int numepochs = 10, int batchsize = 50, 
 			double incScale = 1.2, double decScale = 0.5, double incScaleMax = 50.0, double decScaleMin = 1e-6, bool verbose = true);
 		//
-		int quickprop(MatrixXd error, vector<MatrixXd> & dW, vector<VectorXd> & dB, vector<MatrixXd> & gradW, vector<VectorXd> & gradB);
-		VectorXd quickpropTrain(MatrixXd x, MatrixXd y, int numepochs = 10, int batchsize = 50, bool verbose = true);
+		//int quickprop(MatrixXd error, vector<MatrixXd> & dW, vector<VectorXd> & dB, vector<MatrixXd> & gradW, vector<VectorXd> & gradB);
+		//VectorXd quickpropTrain(MatrixXd x, MatrixXd y, int numepochs = 10, int batchsize = 50, bool verbose = true);
 		//
 		MatrixXd predict(MatrixXd batch_x);
 		MatrixXd predict(MatrixXd batch_x, int nstep, int start = 0);
