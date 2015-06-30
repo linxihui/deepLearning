@@ -14,14 +14,11 @@
 
 
 feedForwardNetwork::feedForwardNetwork(stackedAutoEncoder &sae, int output_dim, string out, double hid_dropout, double vis_dropout) {
-	cout << "SAE has " << sae.layer.size() << "hidden layers: "<< sae.hidden.transpose() << endl;
 	layer_size.setConstant(sae.hidden.size() + 2, -1);
 	layer_size[0] = sae.input_dim;
 	layer_size.segment(1, sae.hidden.size()) = sae.hidden;
 	layer_size[sae.hidden.size() + 1] = output_dim;
-	cout << "Inducing neural network layers: " << layer_size.transpose() << endl;
 	act_fun = sae.layer[0].act_fun;
-	cout << "Hidden layer: " << act_fun << endl;
 	output = out;
 	hidden_dropout = hid_dropout;
 	visible_dropout = vis_dropout;
@@ -31,16 +28,13 @@ feedForwardNetwork::feedForwardNetwork(stackedAutoEncoder &sae, int output_dim, 
 	W.resize(layer_size.size()-1);
 	B.resize(layer_size.size()-1);
 	
-	cout << "Number of layers: " << layer_size.size() << endl;
 	int i = 0; 
 	for(;i < layer_size.size()-2; i++) {
-		cout << "Layer: " << i+1 << " : " << sae.layer[i].W[0].rows() << "x" << sae.layer[i].W[0].cols() << endl;
 		W[i] = sae.layer[i].W[0];
 		B[i] = sae.layer[i].B[0];
 		}
 	W[i] = W[i].Random(layer_size[i+1], layer_size[i])*0.1;
 	B[i] = B[i].Random(layer_size[i+1])*0.1;
-	cout << "Done initializing NN." << endl;
 	}
 
 			
