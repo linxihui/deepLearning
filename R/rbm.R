@@ -26,16 +26,17 @@ rbm <- function(x, hidden, numepochs = 10L, batchsize = 100L,
 
 #' @rdname rbm
 #' @export
-rbm.more(rbm, x, numepochs = 10L, batchsize = 100L, 
+rbm.more <- function(rbm, x, numepochs = 10L, batchsize = 100L, 
 	learning_rate = rbm$learning_rate, momentum = rbm$momentum, 
 	learning_rate_scale = rbm$learning_rate_scale, cd = rbm$cd) {
 	x <- t(x);
-	out <- .Call("C_RBM_train_more", rbm$rbm, x, numepochs, batchsize, momentum, learning_rate_scale, cd, PACKAGE = 'deepLearning');
+	out <- .Call("C_RBM_train_more", rbm$rbm, x, numepochs, batchsize, 
+		momentum, learning_rate_scale, cd, PACKAGE = 'deepLearning');
 	out$error <- c(rbm$error, out$error);
-	out$numepochs <- c(out$numepochs, numepochs);
-	out$batchsize <- c(out$batchsize, batchsize);
-	out$learning_rate <- c(out$learning_rate, learning_rate);
-	out$learning_rate_scale <- c(out$learning_rate_scale, learning_rate_scale);
-	out$cd <- c(out$cd, cd);
+	out$numepochs <- c(rbm$numepochs, numepochs);
+	out$batchsize <- c(rbm$batchsize, batchsize);
+	out$learning_rate <- c(rbm$learning_rate, learning_rate);
+	out$learning_rate_scale <- c(rbm$learning_rate_scale, learning_rate_scale);
+	out$cd <- c(rbm$cd, cd);
 	return(structure(out, class = 'RBM'));
 	}
