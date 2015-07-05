@@ -14,9 +14,10 @@
 rbm <- function(x, hidden, numepochs = 10L, batchsize = 100L, 
 	learning_rate = 0.1, momentum = 0.5, learning_rate_scale = 1.0, cd = 1L) {
 	x <- t(x);
-	out <- .Call("C_RBM", x, hidden, numepochs, batchsize, learning_rate, learning_rate_scale, momentum, cd, PACKAGE = 'deepLearning');
-	out$numepochs <- 10L;
-	out$batchsize <- 100L;
+	out <- .Call("C_RBM", x, hidden, numepochs, batchsize, learning_rate, 
+		momentum, learning_rate_scale, cd, PACKAGE = 'deepLearning');
+	out$numepochs <- numepochs;
+	out$batchsize <- batchsize;
 	out$learning_rate <- learning_rate;
 	out$learning_rate_scale <- learning_rate_scale;
 	out$cd <- cd;
@@ -29,9 +30,8 @@ rbm.more(rbm, x, numepochs = 10L, batchsize = 100L,
 	learning_rate = rbm$learning_rate, momentum = rbm$momentum, 
 	learning_rate_scale = rbm$learning_rate_scale, cd = rbm$cd) {
 	x <- t(x);
-	error <- rbm$error;
 	out <- .Call("C_RBM_train_more", rbm$rbm, x, numepochs, batchsize, momentum, learning_rate_scale, cd, PACKAGE = 'deepLearning');
-	out$error <- c(error, out$error);
+	out$error <- c(rbm$error, out$error);
 	out$numepochs <- c(out$numepochs, numepochs);
 	out$batchsize <- c(out$batchsize, batchsize);
 	out$learning_rate <- c(out$learning_rate, learning_rate);

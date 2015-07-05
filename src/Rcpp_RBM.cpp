@@ -11,9 +11,8 @@ List C_RBM(MatrixXd x, int hidden, int numepochs = 3, int batchsize = 100,
 	}
 
 
-List C_RBM_train_more(RBM rbm, Matrix x, double learning_rate, 
-		double learning_rate_scale, double momentum,
-		string hidden_type, string visible_type, int cd
+List C_RBM_train_more(RBM rbm, Matrix x, int numepochs = 3, int batchsize = 100, 
+	double learning_rate, double momentum, double learning_rate_scale, int cd
 	) {
 	//RBM rbm(rbm_trained);
 	VectorXd error = rbm.train(x, numepochs, batchsize, learning_rate, momentum, learning_rate_scale, cd);
