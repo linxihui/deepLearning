@@ -1,7 +1,41 @@
-rbm <- function(x, hidden, numepochs, batchsize, learning_rate, learning_rate_scale, momentum, cd) {
-	.Call("C_RBM", x, hidden, numepochs, batchsize, learning_rate, learning_rate_scale, momentum, cd, PACKAGE = 'deepLearning')
+#' @title Train Restricted Boltzmann Machine
+#' @param x Input matrix: row = sample, col = feature
+#' @param hidden A vector of numbers of hidden neurons
+#' @param numepochs Number of epoches
+#' @param batchsize Min-batch size
+#' @param learning_rate Learning speed / shrinkage
+#' @param momentum Fraction of last update to researve
+#' @param Learning_rate_scale Scalar of of learning_rate
+#' @param cd Number of steps of contrast divergence
+#' @param rbm RBM object
+#' @return RBM object
+#' @details `rbm` trains RBM object; `rbm.more` trains more epoches.
+#' @export
+rbm <- function(x, hidden, numepochs = 10L, batchsize = 100L, 
+	learning_rate = 0.1, momentum = 0.5, learning_rate_scale = 1.0, cd = 1L) {
+	x <- t(x);
+	out <- .Call("C_RBM", x, hidden, numepochs, batchsize, learning_rate, learning_rate_scale, momentum, cd, PACKAGE = 'deepLearning');
+	out$numepochs <- 10L;
+	out$batchsize <- 100L;
+	out$learning_rate <- learning_rate;
+	out$learning_rate_scale <- learning_rate_scale;
+	out$cd <- cd;
+	return(structure(out, class = 'RBM'));
 	}
 
-rbm.more(rbm, x, learning_rate, learning_rate_scale, momentum, cd) {
-	.Call("C_RBM_train_more", x, learning_rate, learning_rate_scale, momentum, cd, PACKAGE = 'deepLearning')
+#' @rdname rbm
+#' @export
+rbm.more(rbm, x, numepochs = 10L, batchsize = 100L, 
+	learning_rate = rbm$learning_rate, momentum = rbm$momentum, 
+	learning_rate_scale = rbm$learning_rate_scale, cd = rbm$cd) {
+	x <- t(x);
+	error <- rbm$error;
+	out <- .Call("C_RBM_train_more", rbm$rbm, x, numepochs, batchsize, momentum, learning_rate_scale, cd, PACKAGE = 'deepLearning');
+	out$error <- c(error, out$error);
+	out$numepochs <- c(out$numepochs, numepochs);
+	out$batchsize <- c(out$batchsize, batchsize);
+	out$learning_rate <- c(out$learning_rate, learning_rate);
+	out$learning_rate_scale <- c(out$learning_rate_scale, learning_rate_scale);
+	out$cd <- c(out$cd, cd);
+	return(structure(out, class = 'RBM'));
 	}
