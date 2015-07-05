@@ -1,15 +1,18 @@
-#' @title Train Restricted Boltzmann Machine
+#' @title Train A Stacked Auto-encoder
 #' @param x Input matrix: row = sample, col = feature
 #' @param hidden A vector of numbers of hidden neurons
+#' @param act_fun Name of activatin fuctnion. Options: 'sigm', 'tanh', 'rect', 'srect'.
+#' @param out_fun Name of output/reconstruction function. Options: 'linear', 'sigm'
+#' @param method Training method. Options: 'bp', 'rprop'
+#' @param param A list of training method parameters, dependening on \code{method}:
+#'      \item{\code{method == 'bp'}{\code{list(learning_rate, momentum, learning_rate)}}
+#'      \item{\code{method = 'rprop'}} {\code{list(inc_scale, dec_scale, inc_scale_max, dec_scale_max)}}
 #' @param numepochs Number of epoches
 #' @param batchsize Min-batch size
-#' @param learning_rate Learning speed / shrinkage
-#' @param momentum Fraction of last update to researve
-#' @param Learning_rate_scale Scalar of of learning_rate
-#' @param cd Number of steps of contrast divergence
-#' @param rbm RBM object
-#' @return RBM object
-#' @details `rbm` trains RBM object; `rbm.more` trains more epoches.
+#' @param verbose If to display training message.
+#' @param sae An trained 'SAE' object
+#' @return SAE object
+#' @details `sae` trains RBM object; `sae.more` trains more epoches.
 #' @export
 
 sae <- function(x, hidden, act_fun = 'sigm', out_fun = 'sigm', method = c('bp', 'rprop'), param,
