@@ -40,24 +40,23 @@ class RBM {
 		MatrixXd sample_h_given_v(MatrixXd v);
 		double train_a_batch(MatrixXd v1, int s);
 
-		VectorXd RBM::train(MatrixXd &x, int numepochs = 10, int batchsize = 100, double learning_rate = 0.1, 
+		VectorXd train(MatrixXd &x, int numepochs = 10, int batchsize = 100, double learning_rate = 0.1, 
 			double momentum = 0.5, double learning_rate_scale = 1.0, int CD = 1);
 	};
 
 
 class DBN {
 	public:
-		VectorXi size;
-		std::vector<RBM> rbm;
-		string hidden_type, visible_type;
+		int input_dim;
+		VectorXi hidden;
+		vector<RBM> layer;
 
 		DBN(int input_dim, VectorXi hid);
 		//
-		std::vector<VectorXd> train(MatrixXd &x, double learning_rate = 0.1, 
+		MatrixXd train(MatrixXd &x, double learning_rate = 0.1, 
 			double learning_rate_scale = 1, double momentum = 0.5, int numepochs = 10, 
 			int batchsize = 100, int CD = 1, bool verbose = true);
 		//
-		//MatrixXd move_down(MatrixXd h, int round = 10);
 		MatrixXd extractHiddenFeature(MatrixXd x);
 		MatrixXd reconstructInput(MatrixXd x);
 	};
