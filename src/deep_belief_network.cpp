@@ -1,21 +1,3 @@
-class DBN {
-	public:
-		int input_dim;
-		VectorXi hidden;
-		vector<feedForwardNetwork> layer;
-
-		DBN(int input_dim, VectorXi hid);
-		//
-		std::vector<VectorXd> train(MatrixXd &x, double learning_rate = 0.1, 
-			double learning_rate_scale = 1, double momentum = 0.5, int numepochs = 10, 
-			int batchsize = 100, int CD = 1, bool verbose = true);
-		//
-		//MatrixXd move_down(MatrixXd h, int round = 10);
-		MatrixXd extractHiddenFeature(MatrixXd x);
-		MatrixXd reconstructInput(MatrixXd x);
-	};
-
-
 DBN::DBN(int in_dim, VectorXi hid) {
 	input_dim = in_dim;
 	hidden = hid;
@@ -29,33 +11,30 @@ DBN::DBN(int in_dim, VectorXi hid) {
 	}
 
 
-MatrixXd DNB::train(MatrixXd &x, double learning_rate, 
-	double learning_rate_scale, double momentum, int numepochs, 
-	int batchsize = 100, int CD = 1, bool verbose = true) {
-	MatrixXd prelayer_x(x);
+MatrixXd DNB::train(MatrixXd &x, double learning_rate, double learning_rate_scale, 
+	double momentum, int numepochs, int batchsize, int CD, bool verbose) {
+	MatrixXd pre_layer(x);
 	for (int i = 0; i < hidden.size(); i++) {
 		if (verbose) cout << "Training layer " << i+1 << "..." << endl;
-		layer[i].train(prelayer_x, numepochs, batchsize, learning_rate, momentum, learning_rate_scale, CD);
-		prelayer_x = layer[i].prob_h_given_v(prelayer_x)
+		layer[i].train(pre_layer, numepochs, batchsize, learning_rate, momentum, learning_rate_scale, CD);
+		pre_layer = layer[i].prob_h_given_v(pre_layer)
 		}
-	return prelayer_x;
+	return pre_layer;
 	}
 
 
-
-MatrixXd DBN::extractFeature(MatrixXd x) {
-	MatrixXd prelayer_x(x);
+MatrixXd DBN::extractFeature(MatrixXd v) {
+	MatrixXd pre_layer(v);
 	for (int i = 0; i < hidden.size(); i++) {
-		prelayer_x = layer[i].prob_h_given_v(prelayer_x);
+		pre_layer = layer[i].prob_h_given_v(pre_layer);
 		}
-	return prelayer_x;
+	return pre_layer;
 	}
 
-MatrixXd DBN::reconstruct(MatrixXd x) {
-	MatrixXd prelayer_x;
-	prelayer_x = extractFeature(x);
+MatrixXd DBN::reconstruct(MatrixXd h) {
+	MatrixXd pre_layer(h);
 	for (int i = hidden.size()-1; i >=0; i--) {
-		prelayer_x = layer[i].prob_h_given_v(prelayer_x);
+		pre_layer = layer[i].prob_v_given_h(h);
 		}
-	return prelayer_x;
+	return pre_layer;
 	}
