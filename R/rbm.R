@@ -1,6 +1,6 @@
 #' @title Train Restricted Boltzmann Machine
 #' @param x Input matrix: row = sample, col = feature
-#' @param hidden A vector of numbers of hidden neurons
+#' @param hidden Number of hidden neurons
 #' @param numepochs Number of epoches
 #' @param batchsize Min-batch size
 #' @param learning_rate Learning speed / shrinkage
