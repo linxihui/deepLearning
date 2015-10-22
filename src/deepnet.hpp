@@ -22,7 +22,7 @@ class stackedAutoEncoder;
 
 class RBM {
 	private:
-		double train_a_batch(MatrixXd &, double, double, int);
+		double train_a_batch(MatrixXd, double, double, int);
 	public:
 		Vector2i size; // input, hidden size
 		MatrixXd W, delta_W;  // hidden x visible
@@ -83,6 +83,7 @@ class feedForwardNetwork {
 		//feedForwardNetwork(feedForwardNetwork &nn);
 		feedForwardNetwork(VectorXi size, string actf = "sigm", string out = "linear", double hid_dropout = 0.0, double vis_dropout = 0.0);
 		feedForwardNetwork(stackedAutoEncoder &sae, int output_dim, string out = "linear", double hid_dropout = 0.0, double vis_dropout = 0.0);
+		feedForwardNetwork(DBN &dbn, int output_dim, string out = "linear", double hid_dropout = 0.0, double vis_dropout = 0.0);
 		//
 		MatrixXd ff(MatrixXd batch_x, MatrixXd batch_y);
 		MatrixXd ff(MatrixXd batch_x);
