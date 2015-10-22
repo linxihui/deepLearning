@@ -24,16 +24,6 @@ RBM::RBM(MatrixXd _W, MatrixXd _delta_W,
 		delta_hBias = _delta_hBias;
 		}
 
-RBM::RBM(RBM &rbm_trained) {
-	W = rbm_trained.W;
-	vBias = rbm_trained.vBias;
-	hBias = rbm_trained.hBias;
-	delta_W = rbm_trained.delta_W;
-	delta_vBias = rbm_trained.delta_vBias;
-	delta_hBias = rbm_trained.delta_hBias;
-	size = rbm_trained.size;
-	}
-
 MatrixXd RBM::prob_v_given_h(MatrixXd h) {
 	return sigm(h*W + vBias.transpose().replicate(h.rows(), 1));
 	}
@@ -50,7 +40,7 @@ MatrixXd RBM::sample_h_given_v(MatrixXd v) {
 	return bernoulli_sample(prob_h_given_v(v));
 	}
 
-double RBM::train_a_batch(MatrixXd v1, double learning_rate, double momentum) {
+double RBM::train_a_batch(MatrixXd &v1, double learning_rate, double momentum, int CD) {
 	int n_sample = v1.rows();
 	MatrixXd h1 = bernoulli_sample(prob_h_given_v(v1));
 
@@ -101,12 +91,12 @@ VectorXd RBM::train(MatrixXd &x, int numepochs, int batchsize, double learning_r
 		int j = 0;
 		if (n_batch >= 1) {
 			for (; j < n_sample - remainder; j += batchsize) {
-				error[s] = train_a_batch(x_perm.block(j, 0, batchsize, x.cols()));
+				error[s] = train_a_batch(x_perm.block(j, 0, batchsize, x.cols()), learning_rate, momentum, CD);
 				s++;
 				}
 			}
 		if (remainder > 0) {
-			error[s] = train_a_batch(x_perm.block(j, 0, remainder, x.cols()));
+			error[s] = train_a_batch(x_perm.block(j, 0, remainder, x.cols()), learning_rate, momentum, CD);
 			s++;
 			}
 		learning_rate = learning_rate * learning_rate_scale;
