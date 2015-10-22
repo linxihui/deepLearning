@@ -37,7 +37,33 @@ feedForwardNetwork::feedForwardNetwork(stackedAutoEncoder &sae, int output_dim, 
 	B[i] = B[i].Random(layer_size[i+1])*0.1;
 	}
 
+
 			
+feedForwardNetwork::feedForwardNetwork(DBN & dbn, int output_dim, string out, double hid_dropout, double vis_dropout) {
+	layer_size.setConstant(dbn.hidden.size() + 2, -1);
+	layer_size[0] = dbn.input_dim;
+	layer_size.segment(1, dbn.hidden.size()) = dbn.hidden;
+	layer_size[dbn.hidden.size() + 1] = output_dim;
+	act_fun = "sigm";
+	output = out;
+	hidden_dropout = hid_dropout;
+	visible_dropout = vis_dropout;
+	post.resize(layer_size.size());
+	dropout_mask.resize(layer_size.size()-1);
+	//
+	W.resize(layer_size.size()-1);
+	B.resize(layer_size.size()-1);
+	
+	int i = 0; 
+	for(;i < layer_size.size()-2; i++) {
+		W[i] = dbn.layer[i].W[0];
+		B[i] = dbn.layer[i].B[0];
+		}
+	W[i] = W[i].Random(layer_size[i+1], layer_size[i])*0.1;
+	B[i] = B[i].Random(layer_size[i+1])*0.1;
+	}
+
+
 feedForwardNetwork::feedForwardNetwork(VectorXi size, string actf, string out, double hid_dropout, double vis_dropout) {
 	layer_size = size;
 	act_fun = actf;
